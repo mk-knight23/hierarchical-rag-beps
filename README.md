@@ -1,4 +1,6 @@
 ## https://chat.qwen.ai/s/deploy/b4ea96f1-2bc7-43b3-a64d-8feb104226a2
+## https://mk-knight23.github.io/hierarchical-rag-beps
+
 
 # 🏛️ Hierarchical RAG System for BEPS Reports - Academic Project
 
