@@ -11,8 +11,8 @@ from typing import Dict, List, Optional, Any
 from dataclasses import dataclass
 import json
 
-from config import ProcessingConfig
-from vector_store import VectorStore
+from src.config import ProcessingConfig
+from src.vector_store import VectorStore
 from .response_router import ResponseRouter, AgentResponse
 from .query_classifier import QueryClassification
 from .web_search_handler import WebSearchHandler

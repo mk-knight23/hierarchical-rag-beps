@@ -1,5 +1,5 @@
-"""Configuration package for the hierarchical RAG system."""
+"""Configuration module for BEPS Agent system."""
 
-from .config import ProcessingConfig
+from .processing_config import ProcessingConfig, load_config
 
-__all__ = ['ProcessingConfig']
+__all__ = ['ProcessingConfig', 'load_config']

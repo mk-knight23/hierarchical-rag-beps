@@ -6,7 +6,7 @@ from typing import List, Union, Tuple
 import asyncio
 from pathlib import Path
 
-from config import ProcessingConfig
+from ..config.processing_config import ProcessingConfig
 
 logger = logging.getLogger(__name__)
 

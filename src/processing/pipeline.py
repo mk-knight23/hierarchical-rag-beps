@@ -7,9 +7,9 @@ import json
 from datetime import datetime
 import hashlib
 
-from .document_loader import DocumentLoader
-from .chunker import TextChunker
-from .summary_generator import SummaryGenerator
+from processing.document_loader import DocumentLoader
+from processing.chunker import TextChunker
+from processing.summary_generator import SummaryGenerator
 from models.data_structures import Document, Chunk, Summary, ProcessedDocument
 
 logger = logging.getLogger(__name__)
@@ -285,7 +285,7 @@ class DocumentProcessingPipeline:
 # Convenience function for running the pipeline
 async def run_pipeline(config_path: str = None, input_path: str = None) -> List[ProcessedDocument]:
     """Run the complete processing pipeline"""
-    from ..config.config_loader import load_config
+    from config.config_loader import load_config
     
     if config_path:
         config = load_config(config_path)

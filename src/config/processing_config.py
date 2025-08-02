@@ -147,3 +147,17 @@ class ProcessingConfig:
         
         if not self.document_loader.supported_extensions:
             raise ValueError("supported_extensions cannot be empty")
+
+
+def load_config(config_path: str = None) -> ProcessingConfig:
+    """Load configuration from YAML file or return default configuration.
+    
+    Args:
+        config_path: Path to YAML configuration file. If None, returns default config.
+    
+    Returns:
+        ProcessingConfig instance
+    """
+    if config_path and Path(config_path).exists():
+        return ProcessingConfig.from_yaml(config_path)
+    return ProcessingConfig.default()

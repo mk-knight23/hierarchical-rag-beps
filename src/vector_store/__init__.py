@@ -1,7 +1,5 @@
-"""Vector store package for document storage and retrieval."""
+"""Vector store module for BEPS Agent system."""
 
 from .vector_store import VectorStore
-from .embeddings import EmbeddingModel
-from .document_processor import DocumentProcessor
 
-__all__ = ['VectorStore', 'EmbeddingModel', 'DocumentProcessor']
+__all__ = ['VectorStore']

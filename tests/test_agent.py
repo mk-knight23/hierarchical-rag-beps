@@ -198,20 +198,18 @@ class TestQueryClassifier:
         from src.agent.query_classifier import QueryClassifier
         return QueryClassifier()
     
-    @pytest.mark.asyncio
-    async def test_factual_query_classification(self, classifier):
+    def test_factual_query_classification(self, classifier):
         """Test factual query classification."""
         query = "What is the minimum tax rate under Pillar Two?"
-        classification = await classifier.classify(query)
+        classification = classifier.classify_query(query)
         
         assert classification.query_type.value == "factual"
         assert classification.domain_specific is True
     
-    @pytest.mark.asyncio
-    async def test_analytical_query_classification(self, classifier):
+    def test_analytical_query_classification(self, classifier):
         """Test analytical query classification."""
         query = "How does Pillar One affect digital services taxation?"
-        classification = await classifier.classify(query)
+        classification = classifier.classify_query(query)
         
         assert classification.query_type.value == "analytical"
     
@@ -246,7 +244,7 @@ class TestConfidenceScorer:
     def mock_classification(self):
         """Create mock query classification."""
         return QueryClassification(
-            query_type=QueryClassification.QueryType.FACTUAL,
+            query_type=QueryType.FACTUAL,
             confidence=0.9,
             keywords=['beps', 'pillar', 'tax'],
             domain_specific=True

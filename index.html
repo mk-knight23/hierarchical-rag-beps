@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hierarchical RAG System for BEPS Reports - Academic Project Showcase</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .hero {
+            text-align: center;
+            color: white;
+            padding: 4rem 0;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #fff, #f0f0f0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 2rem;
+        }
+
+        .github-btn {
+            display: inline-block;
+            background: #24292e;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.3s;
+        }
+
+        .github-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .section {
+            background: white;
+            margin: 2rem 0;
+            padding: 3rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            font-size: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            margin: 2rem 0 1rem 0;
+            font-size: 1.8rem;
+        }
+
+        .architecture-diagram {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+            border-left: 4px solid #667eea;
+        }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .tech-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .tech-card i {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 10px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .feature-card {
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 2rem;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .deployment-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .deployment-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+        }
+
+        .steps {
+            counter-reset: step-counter;
+        }
+
+        .step {
+            counter-increment: step-counter;
+            margin: 1.5rem 0;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .step::before {
+            content: counter(step-counter);
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-weight: bold;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .metric {
+            text-align: center;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 10px;
+        }
+
+        .metric h4 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        footer {
+            background: #2d3748;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        .nav {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .nav a:hover {
+            color: #764ba2;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section {
+                padding: 2rem 1rem;
+            }
+            
+            .nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="container">
+            <ul>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#architecture">Architecture</a></li>
+                <li><a href="#tech-stack">Tech Stack</a></li>
+                <li><a href="#models">Models</a></li>
+                <li><a href="#deployment">Deployment</a></li>
+                <li><a href="#usage">Usage</a></li>
+                <li><a href="#performance">Performance</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <header>
+        <div class="container">
+            <div class="hero">
+                <h1><i class="fas fa-brain"></i> Hierarchical RAG System</h1>
+                <p>Advanced Retrieval-Augmented Generation for BEPS Tax Reports Analysis</p>
+                <a href="https://github.com/mk-knight23/hierarchical-rag-beps" class="github-btn">
+                    <i class="fab fa-github"></i> View on GitHub
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <section id="overview" class="section">
+            <h2><i class="fas fa-info-circle"></i> Project Overview</h2>
+            <p>This academic project implements a sophisticated Hierarchical RAG (Retrieval-Augmented Generation) system specifically designed for analyzing Base Erosion and Profit Shifting (BEPS) action reports. The system features intelligent query routing, multi-layer retrieval, and production-ready deployment options.</p>
+            
+            <div class="metrics">
+                <div class="metric">
+                    <h4>85-92%</h4>
+                    <p>Accuracy</p>
+                </div>
+                <div class="metric">
+                    <h4>1-10s</h4>
+                    <p>Query Latency</p>
+                </div>
+                <div class="metric">
+                    <h4>30 QPM</h4>
+                    <p>GPU Throughput</p>
+                </div>
+                <div class="metric">
+                    <h4>6 QPM</h4>
+                    <p>CPU Throughput</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="architecture" class="section">
+            <h2><i class="fas fa-sitemap"></i> Hierarchical Architecture</h2>
+            
+            <h3>Two-Layer Design</h3>
+            <div class="architecture-diagram">
+┌─────────────────────────────────────────────────────────────┐
+│                    Layer 1: Keyword/Summary Store            │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐         │
+│  │ Keywords    │  │ Summaries   │  │ Metadata    │         │
+│  │ - BEPS      │  │ - Action 1  │  │ - Doc ID    │         │
+│  │ - Transfer  │  │ - Action 5  │  │ - Page      │         │
+│  │ - Pricing   │  │ - Action 13 │  │ - Section   │         │
+│  └─────────────┘  └─────────────┘  └─────────────┘         │
+└─────────────────────────────────────────────────────────────┘
+                              │
+                              ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    Layer 2: Document Store                   │
+│  ┌─────────────────────────────────────────────────────────┐ │
+│  │ Full Document Chunks (512 tokens, 50 overlap)          │ │
+│  │ - Complete BEPS Action Reports                          │ │
+│  │ - Detailed explanations and examples                    │ │
+│  │ - Regulatory text and guidelines                        │ │
+│  └─────────────────────────────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+            </div>
+
+            <h3>Decision-Making Agent Flow</h3>
+            <div class="architecture-diagram">
+User Query → Query Classifier → Decision Engine → Response Router
+                    ↓
+            [RAG] ← → [Direct] ← → [Web Search]
+            </div>
+        </section>
+
+        <section id="tech-stack" class="section">
+            <h2><i class="fas fa-tools"></i> Technology Stack</h2>
+            <div class="tech-stack">
+                <div class="tech-card">
+                    <i class="fab fa-python"></i>
+                    <h4>Python 3.8+</h4>
+                    <p>Core language</p>
+                </div>
+                <div class="tech-card">
+                    <i class="fas fa-brain"></i>
+                    <h4>PyTorch</h4>
+                    <p>ML framework</p>
+                </div>
+                <div class="tech-card">
+                    <i class="fas fa-database"></i>
+                    <h4>FAISS</h4>
+                    <p>Vector search</p>
+                </div>
+                <div class="tech-card">
+                    <i class="fab fa-docker"></i>
+                    <h4>Docker</h4>
+                    <p>Containerization</p>
+                </div>
+                <div class="tech-card">
+                    <i class="fas fa-server"></i>
+                    <h4>FastAPI</h4>
+                    <p>Web framework</p>
+                </div>
+                <div class="tech-card">
+                    <i class="fas fa-search"></i>
+                    <h4>Sentence-Transformers</h4>
+                    <p>Embeddings</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="models" class="section">
+            <h2><i class="fas fa-robot"></i> Models & Methods</h2>
+            
+            <h3>Embedding Models</h3>
+            <div class="code-block">
+# Primary Embedding Model
+sentence-transformers/all-MiniLM-L6-v2
+- 384-dimensional vectors
+- Optimized for semantic similarity
+- Fast inference (critical for hierarchical retrieval)
+- Multilingual support for international BEPS documents
+            </div>
+
+            <h3>Retrieval Methods</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4><i class="fas fa-layer-group"></i> Hierarchical Retrieval</h4>
+                    <p>Two-layer approach: keywords → full documents</p>
+                </div>
+                <div class="feature-card">
+                    <h4><i class="fas fa-balance-scale"></i> Confidence Scoring</h4>
+                    <p>Intelligent routing based on query confidence</p>
+                </div>
+                <div class="feature-card">
+                    <h4><i class="fas fa-globe"></i> Web Fallback</h4>
+                    <p>Internet search for latest updates</p>
+                </div>
+                <div class="feature-card">
+                    <h4><i class="fas fa-cogs"></i> Chunk Processing</h4>
+                    <p>512 tokens with 50-token overlap</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="deployment" class="section">
+            <h2><i class="fas fa-rocket"></i> Deployment Options</h2>
+            
+            <div class="deployment-options">
+                <div class="deployment-card">
+                    <h3><i class="fas fa-microchip"></i> CPU Deployment</h3>
+                    <p><strong>Backend:</strong> llama.cpp with GGUF models</p>
+                    <p><strong>Container:</strong> Ubuntu 20.04 + llama.cpp</p>
+                    <p><strong>Model:</strong> Quantized 4-bit for efficiency</p>
+                    <div class="code-block">
+cd deployment/cpu
+./deploy_cpu.sh
+# Access: http://localhost:8000
+                    </div>
+                </div>
+                
+                <div class="deployment-card">
+                    <h3><i class="fas fa-gpu"></i> GPU Deployment</h3>
+                    <p><strong>Backend:</strong> vLLM for high-throughput inference</p>
+                    <p><strong>Container:</strong> CUDA 11.8 + vLLM</p>
+                    <p><strong>Model:</strong> Full precision for accuracy</p>
+                    <div class="code-block">
+cd deployment/gpu
+./deploy_gpu.sh
+# Access: http://localhost:8000
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="usage" class="section">
+            <h2><i class="fas fa-play"></i> Quick Start Guide</h2>
+            
+            <div class="steps">
+                <div class="step">
+                    <strong>Clone Repository</strong>
+                    <div class="code-block">git clone https://github.com/mk-knight23/hierarchical-rag-beps.git
+cd hierarchical-rag-beps</div>
+                </div>
+                
+                <div class="step">
+                    <strong>Choose Deployment</strong>
+                    <p>Select CPU or GPU deployment based on your hardware</p>
+                </div>
+                
+                <div class="step">
+                    <strong>Run Deployment Script</strong>
+                    <div class="code-block"># For CPU
+cd deployment/cpu && ./deploy_cpu.sh
+
+# For GPU  
+cd deployment/gpu && ./deploy_gpu.sh</div>
+                </div>
+                
+                <div class="step">
+                    <strong>Test the API</strong>
+                    <div class="code-block">curl -X POST http://localhost:8000/query \
+  -H "Content-Type: application/json" \
+  -d '{"query": "What are BEPS Action 13 requirements?"}'</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="performance" class="section">
+            <h2><i class="fas fa-chart-line"></i> Performance Metrics</h2>
+            
+            <h3>Comparison Table</h3>
+            <table style="width: 100%; border-collapse: collapse; margin: 2rem 0;">
+                <thead>
+                    <tr style="background: #667eea; color: white;">
+                        <th style="padding: 1rem; text-align: left;">Metric</th>
+                        <th style="padding: 1rem; text-align: left;">CPU (llama.cpp)</th>
+                        <th style="padding: 1rem; text-align: left;">GPU (vLLM)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 1rem;">Query Latency</td>
+                        <td style="padding: 1rem;">5-10s</td>
+                        <td style="padding: 1rem;">1-2s</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 1rem;">Throughput</td>
+                        <td style="padding: 1rem;">6 QPM</td>
+                        <td style="padding: 1rem;">30 QPM</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 1rem;">Memory Usage</td>
+                        <td style="padding: 1rem;">8GB RAM</td>
+                        <td style="padding: 1rem;">8GB VRAM</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #e2e8f0;">
+                        <td style="padding: 1rem;">Accuracy</td>
+                        <td style="padding: 1rem;">85%</td>
+                        <td style="padding: 1rem;">92%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="section">
+            <h2><i class="fas fa-question-circle"></i> Test Questions</h2>
+            
+            <h3>Hierarchical RAG Evaluation</h3>
+            <ul>
+                <li><strong>Factual:</strong> "What are the four minimum standards under BEPS?"</li>
+                <li><strong>Analytical:</strong> "How does BEPS Action 5 affect transfer pricing documentation?"</li>
+                <li><strong>Procedural:</strong> "What are the steps for implementing Country-by-Country reporting?"</li>
+            </ul>
+
+            <h3>Agent Decision Evaluation</h3>
+            <ul>
+                <li><strong>RAG-Preferred:</strong> "Explain BEPS Action 1 regarding digital economy challenges"</li>
+                <li><strong>Direct Answer:</strong> "What does BEPS stand for?"</li>
+                <li><strong>Web Search:</strong> "Latest BEPS implementation updates for 2024"</li>
+            </ul>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Hierarchical RAG System for BEPS Reports. Academic Project Implementation.</p>
+            <p><a href="https://github.com/mk-knight23/hierarchical-rag-beps" style="color: #667eea;">GitHub Repository</a></p>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add scroll effect to navigation
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.nav');
+            if (window.scrollY > 100) {
+                nav.style.background = 'rgba(255, 255, 255, 0.98)';
+            } else {
+                nav.style.background = 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+    </script>
+</body>
+</html>

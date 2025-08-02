@@ -14,7 +14,7 @@ import json
 
 from ..hierarchical_rag import HierarchicalRAG
 from ..vector_store import VectorStore
-from ..embeddings import EmbeddingModel
+from ..vector_store.embeddings import EmbeddingModel
 from ..config import ProcessingConfig
 
 logger = logging.getLogger(__name__)
