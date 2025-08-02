@@ -16,7 +16,7 @@ import json
 # Add the src directory to the Python path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from processing.pipeline import DocumentProcessor
+from processing.pipeline import DocumentProcessingPipeline
 from config.config_loader import load_config
 
 # Configure logging
@@ -38,7 +38,7 @@ async def process_documents_batch(
     config = load_config()
     
     # Initialize the document processor
-    processor = DocumentProcessor(config)
+    processor = DocumentProcessingPipeline(config)
     
     # Find all PDF files in the input directory
     pdf_files = list(input_dir.glob("*.pdf"))
@@ -87,49 +87,32 @@ async def process_documents_batch(
     # Create output directory
     output_dir.mkdir(parents=True, exist_ok=True)
     
-    # Process documents with concurrency limit
-    semaphore = asyncio.Semaphore(max_concurrent)
+    # Process all documents using the pipeline
+    logger.info("Starting batch processing...")
+    results = await processor.process_documents(str(input_dir))
     
-    async def process_single_with_semaphore(file_path: Path):
-        async with semaphore:
-            try:
-                logger.info(f"Processing: {file_path.name}")
-                result = await processor.process_document(file_path)
-                
-                # Save individual result
-                output_file = output_dir / f"{result.document_id}.json"
-                with open(output_file, 'w') as f:
-                    json.dump(result.to_dict(), f, indent=2, default=str)
-                
-                logger.info(f"Completed: {file_path.name} -> {output_file.name}")
-                return result
-                
-            except Exception as e:
-                logger.error(f"Error processing {file_path.name}: {str(e)}")
-                return None
+    # Filter successful results
+    successful_results = [r for r in results if r.document.error is None]
     
-    # Process all documents
-    results = await asyncio.gather(*[
-        process_single_with_semaphore(file_path)
-        for file_path in all_files
-    ])
-    
-    # Filter out failed processes
-    successful_results = [r for r in results if r is not None]
+    # Save individual results
+    for result in successful_results:
+        output_file = output_dir / f"{result.document.id}.json"
+        with open(output_file, 'w') as f:
+            json.dump(result.model_dump(), f, indent=2, default=str)
     
     # Generate batch summary
     summary = {
-        "total_documents": len(all_files),
+        "total_documents": len(results),
         "successful": len(successful_results),
-        "failed": len(all_files) - len(successful_results),
+        "failed": len(results) - len(successful_results),
         "total_chunks": sum(len(r.chunks) for r in successful_results),
-        "processing_time": sum(r.metadata.get("processing_time", 0) for r in successful_results),
+        "processing_time": sum(float((r.processing_metadata or {}).get("processing_time", 0) or 0) for r in successful_results),
         "documents": [
             {
-                "id": r.document_id,
-                "title": r.metadata.get("title", "Unknown"),
+                "id": r.document.id,
+                "title": r.document.metadata.get("title", "Unknown"),
                 "chunks": len(r.chunks),
-                "file": str(r.metadata.get("source_file", "Unknown"))
+                "file": str(r.document.file_path)
             }
             for r in successful_results
         ]

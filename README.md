@@ -1,257 +1,250 @@
-# Hierarchical RAG System for OECD BEPS Pillar Two
+# BEPS Hierarchical RAG Agent System
 
-A sophisticated Retrieval-Augmented Generation (RAG) system designed specifically for processing and analyzing OECD BEPS Pillar Two documents using hierarchical document processing and intelligent chunking.
+A sophisticated AI agent system for processing and analyzing Base Erosion and Profit Shifting (BEPS) documents using hierarchical retrieval-augmented generation (RAG) with intelligent routing and web search capabilities.
 
-## Overview
+## 🎯 Overview
 
-This system implements a hierarchical approach to document processing that breaks down complex OECD BEPS documents into semantically meaningful chunks while preserving document structure and metadata. The processed documents are then summarized and prepared for advanced retrieval and analysis.
+This system provides an intelligent agent that can:
+- Process BEPS documents (PDF reports, policy papers, regulatory guidance)
+- Answer complex queries about BEPS regulations and compliance
+- Provide factual, analytical, procedural, and comparative insights
+- Integrate RAG retrieval with real-time web search
+- Handle batch processing and caching for performance
 
-## Features
+## 🏗️ Architecture
 
-- **Document Processing Pipeline**: Complete pipeline for processing PDF documents
-- **Intelligent Chunking**: Semantic boundary detection with configurable chunk sizes
-- **Document Summarization**: Automatic summary generation using Phi3 model
-- **Metadata Preservation**: Comprehensive metadata tracking for all chunks
-- **Parallel Processing**: Efficient batch processing with progress tracking
-- **Error Handling**: Robust error handling and logging
-- **Configurable**: YAML-based configuration system
+The system consists of several key components:
 
-## Architecture
+### Core Components
+- **BEPSAgent**: Main orchestrator class
+- **QueryClassifier**: Categorizes queries into types (factual, analytical, procedural, temporal, comparative)
+- **ResponseRouter**: Determines optimal response strategy
+- **RAGHandler**: Retrieves relevant information from processed documents
+- **WebSearchHandler**: Provides real-time information when RAG is insufficient
+- **ConfidenceScorer**: Evaluates response quality and reliability
 
-The system follows a modular architecture with the following components:
+### Response Strategies
+- **RAG_RETRIEVAL**: Use processed BEPS documents
+- **WEB_SEARCH**: Fetch current information
+- **HYBRID**: Combine RAG and web search
+- **DIRECT_ANSWER**: Use when query is simple
+
+## 📁 Project Structure
 
 ```
 hierarchical-rag-beps/
-├── src/
-│   ├── models/
-│   │   └── data_structures.py    # Core data classes
-│   ├── processing/
-│   │   ├── document_loader.py    # PDF document loading
-│   │   ├── chunker.py           # Text chunking engine
-│   │   ├── summary_generator.py # Document summarization
-│   │   └── pipeline.py          # Main processing pipeline
-│   ├── config/
-│   │   ├── __init__.py
-│   │   ├── config_loader.py     # Configuration loading
-│   │   └── processing_config.yaml # Default configuration
-├── examples/
-│   ├── basic_usage.py           # Simple usage examples
-│   └── batch_processing.py      # Advanced batch processing
 ├── data/
-│   ├── raw/                     # Input documents
-│   └── processed/               # Processed output
-└── docs/
-    └── architecture.md          # System architecture
+│   ├── raw/                    # Original PDF files
+│   ├── processed/              # Processed text files
+│   └── vector_store/           # FAISS vector database
+├── src/
+│   └── agent/
+│       ├── __init__.py
+│       ├── beps_agent.py       # Main agent class
+│       ├── query_classifier.py # Query type classification
+│       ├── response_router.py  # Strategy selection
+│       ├── rag_handler.py      # RAG implementation
+│       ├── web_search_handler.py # Web search integration
+│       └── confidence_scorer.py # Response scoring
+├── tests/
+│   ├── test_agent.py          # Comprehensive test suite
+│   ├── run_tests.py          # Test runner
+│   └── integration_demo.py   # Integration demonstration
+├── examples/
+│   ├── batch_process_pdfs.py  # PDF processing script
+│   ├── batch_processing.py    # Batch query processing
+│   └── check_pdf_files.py     # PDF validation
+├── config/
+│   └── processing_config.yaml # Configuration settings
+└── README.md
 ```
 
-## Installation
+## 🚀 Quick Start
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd hierarchical-rag-beps
-```
-
-2. Install dependencies:
+### 1. Install Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-3. Install system dependencies for PDF processing:
+### 2. Process PDF Documents
 ```bash
-# On Ubuntu/Debian
-sudo apt-get install poppler-utils
-
-# On macOS
-brew install poppler
-
-# On Windows
-# Download poppler from https://github.com/oschwartz10612/poppler-windows/releases/
+python examples/batch_process_pdfs.py
 ```
 
-## Quick Start
-
-### Basic Usage
-
-```python
-from src.processing.pipeline import DocumentProcessor
-from src.config.config_loader import load_config
-
-# Load configuration
-config = load_config()
-
-# Initialize processor
-processor = DocumentProcessor(config)
-
-# Process a single document
-result = processor.process_single_document("data/raw/sample.pdf")
-print(f"Generated {len(result.chunks)} chunks")
-print(f"Summary: {result.summary.summary_text[:200]}...")
+### 3. Run Integration Demo
+```bash
+python tests/integration_demo.py
 ```
 
-### Batch Processing
+### 4. Run Tests
+```bash
+python tests/run_tests.py
+```
 
+## 💻 Usage Examples
+
+### Basic Query Processing
 ```python
-from examples.batch_processing import BatchProcessor
+import asyncio
+from src.agent.beps_agent import BEPSAgent
 
-# Initialize batch processor
-processor = BatchProcessor()
+async def main():
+    agent = BEPSAgent()
+    
+    # Single query
+    response = await agent.process_query(
+        "What are the key recommendations in BEPS Action 1?"
+    )
+    print(response['answer'])
+    
+    # Batch processing
+    queries = [
+        "Explain BEPS Action 5",
+        "What is transfer pricing documentation?",
+        "How does BEPS affect developing countries?"
+    ]
+    results = await agent.process_batch_queries(queries)
+    
+asyncio.run(main())
+```
 
-# Process entire directory
-report = processor.process_with_report(
-    input_dir="data/raw",
-    output_dir="data/processed"
+### Advanced Usage
+```python
+# With custom configuration
+agent = BEPSAgent(
+    cache_ttl=3600,  # 1 hour cache
+    max_web_results=5,
+    confidence_threshold=0.7
 )
 
-print(f"Processed {report['processing_summary']['total_documents']} documents")
+# Health check
+health = await agent.health_check()
+print(f"System status: {health['status']}")
+
+# Statistics
+stats = agent.get_statistics()
+print(f"Total queries processed: {stats['total_queries']}")
 ```
 
-## Configuration
+## 🧪 Testing
 
-The system uses YAML configuration files for flexible settings. Edit `src/config/processing_config.yaml`:
+The system includes comprehensive testing:
 
+### Unit Tests
+- Component-level testing for all agent modules
+- Mock external dependencies for reliable testing
+- Test edge cases and error handling
+
+### Integration Tests
+- End-to-end system testing
+- Real document processing
+- Performance benchmarking
+
+### Run All Tests
+```bash
+# Run all tests
+python tests/run_tests.py
+
+# Run specific test categories
+python tests/run_tests.py --unit-only
+python tests/run_tests.py --integration-only
+python tests/run_tests.py --performance
+```
+
+## 📊 Performance Features
+
+- **Caching**: Intelligent caching for repeated queries
+- **Batch Processing**: Efficient handling of multiple queries
+- **Timeout Handling**: Graceful degradation for slow operations
+- **Statistics Collection**: Performance monitoring and analytics
+- **Health Checks**: System status monitoring
+
+## 🔧 Configuration
+
+### Environment Variables
+```bash
+# Optional: Set custom configuration
+export BEPS_CACHE_TTL=3600
+export BEPS_MAX_WEB_RESULTS=10
+export BEPS_CONFIDENCE_THRESHOLD=0.8
+```
+
+### Configuration File
 ```yaml
+# config/processing_config.yaml
 processing:
   chunk_size: 1000
   chunk_overlap: 200
-  batch_size: 10
   max_workers: 4
-  
-paths:
-  input_dir: "data/raw"
-  output_dir: "data/processed"
-  cache_dir: "data/cache"
-  
-models:
-  summary_model: "microsoft/Phi-3-mini-4k-instruct"
-  device: "auto"
-  
-logging:
-  level: "INFO"
-  file: "logs/processing.log"
+
+agent:
+  cache_ttl: 3600
+  max_web_results: 5
+  confidence_threshold: 0.7
+  timeout: 30
 ```
 
-## Usage Examples
+## 🎯 Query Types
 
-### 1. Basic Document Processing
+The system handles five types of queries:
 
+1. **Factual**: "What is BEPS Action 1 about?"
+2. **Analytical**: "How do BEPS recommendations affect developing countries?"
+3. **Procedural**: "What steps should companies take for BEPS compliance?"
+4. **Temporal**: "What were the main BEPS developments in 2023?"
+5. **Comparative**: "Compare BEPS Action 1 and Action 5 approaches"
+
+## 📈 Performance Metrics
+
+The system tracks:
+- Query processing time
+- Confidence scores
+- Cache hit rates
+- Strategy effectiveness
+- Error rates
+
+## 🔍 Troubleshooting
+
+### Common Issues
+
+1. **PDF Processing Errors**
+   - Check file permissions
+   - Verify PDF format compatibility
+   - Review processing logs
+
+2. **Low Confidence Scores**
+   - Increase document coverage
+   - Adjust confidence threshold
+   - Check document quality
+
+3. **Slow Response Times**
+   - Enable caching
+   - Optimize chunk sizes
+   - Check network connectivity
+
+### Debug Mode
 ```python
-from src.processing.pipeline import DocumentProcessor
-from src.config.config_loader import load_config
+# Enable debug logging
+import logging
+logging.basicConfig(level=logging.DEBUG)
 
-config = load_config()
-processor = DocumentProcessor(config)
-
-# Process single document
-result = processor.process_single_document("path/to/document.pdf")
-print(f"Document: {result.document.metadata['filename']}")
-print(f"Chunks: {len(result.chunks)}")
-print(f"Summary: {result.summary.summary_text}")
+agent = BEPSAgent(debug=True)
 ```
 
-### 2. Directory Processing
-
-```python
-# Process entire directory
-results = processor.process_directory("data/raw")
-
-for doc_id, result in results.items():
-    print(f"\n{result.document.metadata['filename']}:")
-    print(f"  - {len(result.chunks)} chunks")
-    print(f"  - Topics: {', '.join(result.summary.key_topics)}")
-```
-
-### 3. Custom Configuration
-
-```python
-# Load custom config
-custom_config = load_config("my_config.yaml")
-
-# Override specific settings
-custom_config['processing']['chunk_size'] = 1500
-custom_config['processing']['max_workers'] = 8
-
-processor = DocumentProcessor(custom_config)
-```
-
-## Data Structures
-
-### Document
-Represents a raw document with metadata:
-- `content`: Raw text content
-- `metadata`: Document metadata (filename, page count, etc.)
-
-### Chunk
-Represents a processed text chunk:
-- `chunk_id`: Unique identifier
-- `text`: Chunk text content
-- `metadata`: Chunk metadata (source, page numbers, etc.)
-
-### Summary
-Document summary with:
-- `summary_text`: Concise document summary
-- `topics`: Extracted topics
-- `keywords`: Key terms and phrases
-
-### ProcessedDocument
-Complete processed document containing:
-- `document`: Original document
-- `chunks`: List of chunks
-- `summary`: Document summary
-
-## Error Handling
-
-The system includes comprehensive error handling:
-
-- **File Access**: Handles missing or corrupted files
-- **PDF Processing**: Manages PDF parsing errors
-- **Model Errors**: Handles model loading and inference failures
-- **Memory Management**: Prevents memory exhaustion with large documents
-
-## Performance Optimization
-
-- **Parallel Processing**: Utilizes multiple CPU cores
-- **Batch Processing**: Efficient batch size configuration
-- **Caching**: Optional caching for repeated processing
-- **Memory Management**: Streaming processing for large documents
-
-## Testing
-
-Run the test suite:
-
-```bash
-# Install test dependencies
-pip install pytest pytest-cov
-
-# Run tests
-pytest tests/
-
-# Run with coverage
-pytest --cov=src tests/
-```
-
-## Logging
-
-Logs are written to:
-- Console: Configurable log level
-- File: `logs/processing.log`
-- Structured format for easy parsing
-
-## Contributing
+## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Add tests for new functionality
-4. Ensure all tests pass
+4. Run the test suite
 5. Submit a pull request
 
-## License
+## 📄 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## Support
+## 🙏 Acknowledgments
 
-For issues and questions:
-- Check the documentation in `docs/`
-- Review the examples in `examples/`
-- Open an issue on GitHub
+- OECD for BEPS documentation
+- OpenAI for language model capabilities
+- FAISS for vector similarity search

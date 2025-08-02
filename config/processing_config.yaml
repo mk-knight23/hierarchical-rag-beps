@@ -1,0 +1,38 @@
+paths:
+  input_dir: data/raw
+  output_dir: data/processed
+  temp_dir: data/temp
+  log_dir: logs
+
+processing:
+  batch_size: 3
+  max_workers: 2
+  chunk_size: 1000
+  chunk_overlap: 200
+  max_retries: 3
+  timeout: 300
+
+chunking:
+  min_chunk_size: 100
+  max_chunk_size: 2000
+  semantic_boundary_detection: true
+  preserve_paragraphs: true
+  preserve_sentences: true
+
+summarization:
+  model_name: microsoft/Phi-3-mini-4k-instruct
+  max_summary_length: 500
+  max_topics: 10
+  max_keywords: 20
+  temperature: 0.3
+  top_p: 0.9
+
+document_loader:
+  supported_extensions: ['.pdf', '.txt']
+  max_file_size_mb: 100
+  timeout_seconds: 30
+
+logging:
+  level: INFO
+  format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+  file: processing.log
