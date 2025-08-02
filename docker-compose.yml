@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  # Main application service
+  hierarchical-rag:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: hierarchical-rag-beps
+    volumes:
+      - ./data:/app/data:ro
+      - ./output:/app/output:rw
+      - ./logs:/app/logs:rw
+      - ./config:/app/config:ro
+    environment:
+      - PYTHONPATH=/app
+      - LOG_LEVEL=INFO
+    ports:
+      - "8000:8000"
+    networks:
+      - rag-network
+    restart: unless-stopped
+
+  # Development service
+  hierarchical-rag-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: hierarchical-rag-dev
+    volumes:
+      - .:/app
+      - ./data:/app/data:ro
+      - ./output:/app/output:rw
+      - ./logs:/app/logs:rw
+    environment:
+      - PYTHONPATH=/app
+      - LOG_LEVEL=DEBUG
+    ports:
+      - "8001:8000"
+    networks:
+      - rag-network
+    command: tail -f /dev/null  # Keep container running for development
+
+  # Testing service
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: hierarchical-rag-tests
+    volumes:
+      - .:/app
+      - ./data:/app/data:ro
+      - ./test_output:/app/test_output:rw
+    environment:
+      - PYTHONPATH=/app
+      - LOG_LEVEL=DEBUG
+    networks:
+      - rag-network
+    command: python run_tests.py
+
+  # Jupyter notebook service for experimentation
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: hierarchical-rag-jupyter
+    volumes:
+      - .:/app
+      - ./data:/app/data:ro
+      - ./notebooks:/app/notebooks:rw
+    environment:
+      - PYTHONPATH=/app
+    ports:
+      - "8888:8888"
+    networks:
+      - rag-network
+    command: jupyter notebook --ip=0.0.0.0 --port=8888 --no-browser --allow-root --notebook-dir=/app/notebooks
+
+networks:
+  rag-network:
+    driver: bridge
+
+volumes:
+  data:
+  output:
+  logs:
+  notebooks:

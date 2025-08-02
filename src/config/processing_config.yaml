@@ -1,0 +1,40 @@
+# Document Processing Configuration
+processing:
+  # Chunking parameters
+  chunking:
+    chunk_size: 1000
+    overlap: 200
+    min_chunk_size: 100
+    max_chunk_size: 1500
+    
+  # Document loading
+  document_loader:
+    supported_extensions: [".pdf", ".txt", ".md"]
+    max_file_size_mb: 100
+    timeout_seconds: 30
+    
+  # Summary generation
+  summary:
+    model_name: "microsoft/Phi-3-mini-4k-instruct"
+    max_summary_length: 500
+    max_topics: 10
+    max_keywords: 15
+    
+  # Processing options
+  pipeline:
+    max_workers: 4
+    batch_size: 10
+    enable_progress_bar: true
+    log_level: "INFO"
+    
+  # Output paths
+  output:
+    processed_documents_dir: "data/processed"
+    logs_dir: "logs"
+    temp_dir: "temp"
+    
+  # Error handling
+  error_handling:
+    max_retries: 3
+    retry_delay_seconds: 1
+    skip_corrupted_files: true
